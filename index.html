@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vintage | Premium Clothing</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="light-mode">
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="#">VINTAGE.</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#trending">Trending</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button id="search-btn" aria-label="Search"><i data-lucide="search"></i></button>
+                <button id="cart-btn" aria-label="Cart">
+                    <i data-lucide="shopping-bag"></i>
+                    <span id="cart-count" class="badge">0</span>
+                </button>
+                <button id="user-btn" aria-label="Account"><i data-lucide="user"></i></button>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Slide-in Cart -->
+    <div id="cart-overlay" class="cart-overlay"></div>
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button id="close-cart" aria-label="Close Cart"><i data-lucide="x"></i></button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items injected here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">₹0.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="app">
+        <!-- Views will be injected here (Home, Shop, Product Details) -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>VINTAGE.</h3>
+                <p>Premium clothing for the modern individual.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Bestsellers</a></li>
+                    <li><a href="#">Sale</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Vintage. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Size Guide Modal -->
+    <div id="size-guide-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal"><i data-lucide="x"></i></span>
+            <h2>Size Guide</h2>
+            <table class="size-table">
+                <tr><th>Size</th><th>Chest (in)</th><th>Waist (in)</th></tr>
+                <tr><td>S</td><td>34-36</td><td>28-30</td></tr>
+                <tr><td>M</td><td>38-40</td><td>32-34</td></tr>
+                <tr><td>L</td><td>42-44</td><td>36-38</td></tr>
+                <tr><td>XL</td><td>46-48</td><td>40-42</td></tr>
+                <tr><td>XXL</td><td>50-52</td><td>44-46</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
