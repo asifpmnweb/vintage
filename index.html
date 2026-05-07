@@ -13,24 +13,27 @@
 <body class="light-mode">
     <!-- Navbar -->
     <nav id="navbar" class="navbar">
-        <div class="nav-container">
+        <div class="nav-top">
+            <div class="nav-left">
+                <button id="search-btn" aria-label="Search"><i data-lucide="search"></i></button>
+            </div>
             <div class="logo">
                 <a href="#">VINTAGE.</a>
             </div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#shop">Shop</a></li>
-                <li><a href="#trending">Trending</a></li>
-            </ul>
-            <div class="nav-icons">
-                <button id="search-btn" aria-label="Search"><i data-lucide="search"></i></button>
+            <div class="nav-right">
                 <button id="cart-btn" aria-label="Cart">
                     <i data-lucide="shopping-bag"></i>
                     <span id="cart-count" class="badge">0</span>
                 </button>
                 <button id="user-btn" aria-label="Account"><i data-lucide="user"></i></button>
-
             </div>
+        </div>
+        <div class="nav-bottom">
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#shop">Shop</a></li>
+                <li><a href="#trending">Trending</a></li>
+            </ul>
         </div>
     </nav>
 
@@ -84,6 +87,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Vintage. All rights reserved.</p>
+            <p>Created by <a href="https://updown-interactive.in" target="_blank" rel="noopener noreferrer">updown interactive</a></p>
         </div>
     </footer>
 

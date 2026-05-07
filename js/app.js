@@ -10,6 +10,21 @@ const state = {
     isUserLoggedIn: localStorage.getItem('isUserLoggedIn') === 'true'
 };
 
+// Default categories (can be managed from admin)
+const defaultCategories = [
+    { name: 'Suits', slug: 'suits', image: 'https://images.unsplash.com/photo-1594938298596-70f56fb3cecb?w=800&auto=format&fit=crop' },
+    { name: 'Shirts', slug: 'shirts', image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop' },
+    { name: 'Shoes', slug: 'shoes', image: 'https://images.unsplash.com/photo-1614252339460-e1b18c734812?w=800&auto=format&fit=crop' },
+    { name: 'Trousers', slug: 'trousers', image: 'https://images.unsplash.com/photo-1624378439575-d1ead6bb176d?w=800&auto=format&fit=crop' },
+    { name: 'Outerwear', slug: 'outerwear', image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&auto=format&fit=crop' },
+    { name: 'Accessories', slug: 'accessories', image: 'https://images.unsplash.com/photo-1523779105320-d1cd346ff52b?w=800&auto=format&fit=crop' },
+    { name: 'Knitwear', slug: 'knitwear', image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop' }
+];
+
+function getCategoryList() {
+    return JSON.parse(localStorage.getItem('vintage_categories')) || defaultCategories;
+}
+
 // Elements
 const appEl = document.getElementById('app');
 const navbar = document.getElementById('navbar');
@@ -132,6 +147,7 @@ function renderView() {
         
         if (state.currentView === 'home') {
             setupHeroCarousel();
+            setupCategorySwiper();
         }
         
         lucide.createIcons();
@@ -256,23 +272,22 @@ function renderHome() {
             </div>
         </section>
 
-        <section class="section" style="background-color: var(--bg-secondary);">
-            <h2 class="section-title animate-on-scroll">Shop by Category</h2>
-            <div class="category-grid animate-on-scroll delay-100">
-                <div class="category-card" onclick="window.location.hash='shop/suits'">
-                    <img src="https://images.unsplash.com/photo-1594938298596-70f56fb3cecb?w=800&auto=format&fit=crop" alt="Suits">
-                    <div class="category-overlay"><h3>Suits</h3></div>
-                </div>
-                <div class="category-card" onclick="window.location.hash='shop/shirts'">
-                    <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop" alt="Shirts">
-                    <div class="category-overlay"><h3>Shirts</h3></div>
-                </div>
-                <div class="category-card" onclick="window.location.hash='shop/shoes'">
-                    <img src="https://images.unsplash.com/photo-1614252339460-e1b18c734812?w=800&auto=format&fit=crop" alt="Shoes">
-                    <div class="category-overlay"><h3>Shoes</h3></div>
+        <section style="background-color: var(--bg-secondary); padding: 4rem 2rem;">
+            <h2 class="section-title animate-on-scroll" style="margin-bottom: 3rem;">Shop by Category</h2>
+            <div class="category-swiper animate-on-scroll delay-100" id="category-swiper">
+                <div class="category-marquee-track">
+                    ${[...getCategoryList(), ...getCategoryList()].map(cat => `
+                        <div class="category-card" onclick="window.location.hash='shop/${cat.slug}'">
+                            <div class="category-circle">
+                                <img src="${cat.image}" alt="${cat.name}">
+                            </div>
+                            <span class="category-name">${cat.name}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
         </section>
+
 
         <section class="section">
             <h2 class="section-title animate-on-scroll">Trending Now</h2>
@@ -421,7 +436,11 @@ function setupHeroCarousel() {
         slides[currentSlide].classList.remove('active');
         currentSlide = (currentSlide + 1) % slides.length;
         slides[currentSlide].classList.add('active');
-    }, 4000); // Change slide every 4 seconds
+    }, 4000);
+}
+
+function setupCategorySwiper() {
+    // Handled by CSS Marquee
 }
 
 function setupShopFilters() {
