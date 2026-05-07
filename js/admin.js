@@ -2,10 +2,24 @@ const adminState = {
     isAdmin: localStorage.getItem('isAdmin') === 'true',
     currentTab: 'dashboard',
     modalOpen: false,
-    editingProduct: null
+    editingProduct: null,
+    categoryModalOpen: false,
+    editingCategory: null
 };
 
 const adminEl = document.getElementById('admin-app');
+
+const defaultCategories = [
+    { name: 'Suits', slug: 'suits', image: 'https://images.unsplash.com/photo-1594938298596-70f56fb3cecb?w=800&auto=format&fit=crop' },
+    { name: 'Shirts', slug: 'shirts', image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&auto=format&fit=crop' },
+    { name: 'Shoes', slug: 'shoes', image: 'https://images.unsplash.com/photo-1614252339460-e1b18c734812?w=800&auto=format&fit=crop' },
+    { name: 'Trousers', slug: 'trousers', image: 'https://images.unsplash.com/photo-1624378439575-d1ead6bb176d?w=800&auto=format&fit=crop' },
+    { name: 'Outerwear', slug: 'outerwear', image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&auto=format&fit=crop' },
+    { name: 'Accessories', slug: 'accessories', image: 'https://images.unsplash.com/photo-1523779105320-d1cd346ff52b?w=800&auto=format&fit=crop' },
+    { name: 'Knitwear', slug: 'knitwear', image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&auto=format&fit=crop' }
+];
+
+
 
 function initAdmin() {
     renderAdminView();
@@ -58,6 +72,7 @@ function renderAdminLayout() {
                     <div class="admin-nav">
                         <div class="admin-nav-item ${adminState.currentTab === 'dashboard' ? 'active' : ''}" data-tab="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
                         <div class="admin-nav-item ${adminState.currentTab === 'products' ? 'active' : ''}" data-tab="products"><i data-lucide="package"></i> Products</div>
+                        <div class="admin-nav-item ${adminState.currentTab === 'categories' ? 'active' : ''}" data-tab="categories"><i data-lucide="grid"></i> Categories</div>
                         <div class="admin-nav-item ${adminState.currentTab === 'hero' ? 'active' : ''}" data-tab="hero"><i data-lucide="image"></i> Hero Section</div>
                         <div class="admin-nav-item logout" id="logout-btn"><i data-lucide="log-out"></i> Logout</div>
                     </div>
@@ -75,6 +90,7 @@ function renderAdminLayout() {
 function renderTabContent() {
     if (adminState.currentTab === 'dashboard') return renderDashboard();
     if (adminState.currentTab === 'products') return renderProductsTab();
+    if (adminState.currentTab === 'categories') return renderCategoriesTab();
     if (adminState.currentTab === 'hero') return renderHeroTab();
 }
 
@@ -146,6 +162,69 @@ function renderProductsTab() {
             </table>
         </div>
     `;
+}
+
+function renderCategoriesTab() {
+    const cats = JSON.parse(localStorage.getItem('vintage_categories')) || defaultCategories;
+    return `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 2rem; margin: 0;">Manage Categories</h2>
+            <button class="btn btn-primary" id="add-category-btn">Add Category</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+            ${cats.map((cat, index) => `
+                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                    <img src="${cat.image}" alt="${cat.name}" style="width: 100%; height: 130px; object-fit: cover;">
+                    <div style="padding: 1rem;">
+                        <div style="font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.25rem;">${cat.name}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.75rem;">${cat.slug}</div>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button class="edit-cat-btn" data-index="${index}" style="color: var(--accent-color); text-decoration: underline; font-size: 0.85rem;">Edit</button>
+                            <button class="delete-cat-btn" data-index="${index}" style="color: var(--error-color); text-decoration: underline; font-size: 0.85rem;">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        ${adminState.categoryModalOpen ? renderCategoryModal() : ''}
+    `;
+}
+
+function renderCategoryModal() {
+    const isEditing = !!adminState.editingCategory;
+    const cat = adminState.editingCategory || { name: '', slug: '', image: '' };
+    return `
+        <div class="modal active" style="align-items: center;">
+            <div class="modal-content" style="max-width: 500px;">
+                <button class="close-modal" id="close-cat-modal"><i data-lucide="x"></i></button>
+                <h2 style="font-size: 1.8rem; margin-bottom: 2rem;">${isEditing ? 'Edit Category' : 'Add Category'}</h2>
+                <form id="category-form">
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" id="cat-name" required value="${cat.name}" placeholder="e.g. Jackets">
+                    </div>
+                    <div class="form-group">
+                        <label>Slug (URL key)</label>
+                        <input type="text" id="cat-slug" required value="${cat.slug}" placeholder="e.g. jackets">
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" id="cat-image" required value="${cat.image}" placeholder="https://...">
+                    </div>
+                    <div style="margin-top: 2rem; text-align: right;">
+                        <button type="button" id="cancel-cat-modal" class="btn" style="border: 1px solid var(--border-color); color: var(--text-color); margin-right: 1rem;">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+function closeCategoryModal() {
+    adminState.categoryModalOpen = false;
+    adminState.editingCategory = null;
+    renderAdminView();
 }
 
 function renderHeroTab() {
@@ -267,6 +346,59 @@ function attachAdminListeners() {
     // Logout
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+
+    // Categories Tab Listeners
+    if (adminState.currentTab === 'categories') {
+        const addCatBtn = document.getElementById('add-category-btn');
+        if (addCatBtn) addCatBtn.addEventListener('click', () => {
+            adminState.editingCategory = null;
+            adminState.categoryModalOpen = true;
+            renderAdminView();
+        });
+
+        document.querySelectorAll('.edit-cat-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.dataset.index);
+                const cats = JSON.parse(localStorage.getItem('vintage_categories')) || defaultCategories;
+                adminState.editingCategory = { ...cats[idx], _index: idx };
+                adminState.categoryModalOpen = true;
+                renderAdminView();
+            });
+        });
+
+        document.querySelectorAll('.delete-cat-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (confirm('Delete this category?')) {
+                    const idx = parseInt(e.target.dataset.index);
+                    const cats = JSON.parse(localStorage.getItem('vintage_categories')) || defaultCategories;
+                    cats.splice(idx, 1);
+                    localStorage.setItem('vintage_categories', JSON.stringify(cats));
+                    renderAdminView();
+                }
+            });
+        });
+
+        if (adminState.categoryModalOpen) {
+            document.getElementById('close-cat-modal').addEventListener('click', closeCategoryModal);
+            document.getElementById('cancel-cat-modal').addEventListener('click', closeCategoryModal);
+            document.getElementById('category-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const cats = JSON.parse(localStorage.getItem('vintage_categories')) || defaultCategories;
+                const newCat = {
+                    name: document.getElementById('cat-name').value,
+                    slug: document.getElementById('cat-slug').value.toLowerCase().trim(),
+                    image: document.getElementById('cat-image').value
+                };
+                if (adminState.editingCategory && adminState.editingCategory._index !== undefined) {
+                    cats[adminState.editingCategory._index] = newCat;
+                } else {
+                    cats.push(newCat);
+                }
+                localStorage.setItem('vintage_categories', JSON.stringify(cats));
+                closeCategoryModal();
+            });
+        }
+    }
 
     // Products Tab Listeners
     if (adminState.currentTab === 'products') {
